@@ -280,10 +280,10 @@ class game {
             let Y = Yalignment + sizeChess + sizeBlock / 13;
             this.context.drawImage(AutoIM, X, Y, w, h);
         } else {
-            this.context.font = this.getSize() / 3 + 'px Arial Black';
+            this.context.font = this.getSize() / 1.5 + 'px Arial Black';
             this.context.fillStyle = "#FF00CC";
             this.context.textAlign = "center";
-            this.context.fillText((index + 1) + " / " + ans.length, game_W / 2, Yalignment + sizeChess + sizeBlock / 3);
+            this.context.fillText((index + 1) + " / " + ans.length, game_W / 2, Yalignment + sizeChess * 1.05 + (game_H - Yalignment - sizeChess) / 4);
             this.context.drawImage(preIM, Xalignment - sizeBlock * 1.1, Yalignment + sizeChess / 2 - sizeBlock, sizeBlock, sizeBlock * 2);
             this.context.drawImage(nextIM, Xalignment + sizeChess + sizeBlock * 0.1, Yalignment + sizeChess / 2 - sizeBlock, sizeBlock, sizeBlock * 2);
         }
