@@ -7,7 +7,7 @@ QueenIM.src = "images/queen.png";
 xQueen = yQueen = 3;
 xQueen2 = yQueen2 = preX = preY = 0;
 typeMove = 0;
-N = 8;
+N = 4;
 data = Array.from(new Array(N), () => Array.from(new Array(N), () => 0));
 win = false;
 
@@ -24,7 +24,7 @@ class game {
         document.body.appendChild(this.canvas);
         this.chessBoard = new chessboard(this);
         this.render();
-        this.randomData();
+        this.createData();
 
         this.loop();
 
@@ -101,6 +101,14 @@ class game {
                 data[preX][preY] = 1;
             }
             typeMove = 0;
+            let k = this.check();
+            if (k.length == 0) {
+                window.alert("Win");
+                N++;
+                this.canvas.width = 0;
+                this.render();
+                this.createData();
+            }
         })
     }
 
@@ -147,7 +155,28 @@ class game {
         }
     }
 
-    randomData() {
+    check() {
+        let row = Array.from(new Array(N), () => 0);
+        let col = Array.from(new Array(N), () => 0);
+        let c1 = Array.from(new Array(2 * N - 1), () => 0);
+        let c2 = Array.from(new Array(2 * N - 1), () => 0);
+        for (let i = 0; i < N; i++)
+            for (let j = 0; j < N; j++)
+                if (data[i][j] == 1) {
+                    row[i]++;
+                    col[j]++;
+                    c1[i - j + (N - 1)]++;
+                    c2[i + j]++;
+                }
+        let ans = [];
+        for (let i = 0; i < N; i++)
+            for (let j = 0; j < N; j++)
+                if (data[i][j] == 1 && (row[i] > 1 || col[j] > 1 || c1[i - j + (N - 1)] > 1 || c2[i + j] > 1))
+                    ans.push({ x: i, y: j });
+        return ans;
+    }
+
+    createData() {
         data = Array.from(new Array(N), () => Array.from(new Array(N), () => 0));
         data[0] = Array.from(new Array(N), () => 1);
         console.log(data);
@@ -156,9 +185,25 @@ class game {
     draw() {
         this.clearScreen();
         this.chessBoard.draw();
+        this.drawBackground();
         this.drawQueen(typeMove);
         this.drawText();
     }
+
+    drawBackground() {
+        let k = this.check();
+        this.context.fillStyle = "red";
+        for (let i = 0; i < k.length; i++) {
+            let R = sizeBlock / 2.35;
+            let X = Xalignment + k[i].y * sizeBlock + sizeBlock / 2;
+            let Y = Yalignment + k[i].x * sizeBlock + sizeBlock / 2;
+
+            this.context.beginPath();
+            this.context.arc(X, Y, R, 0, 2 * Math.PI);
+            this.context.fill();
+        }
+    }
+
     drawText() {
         this.context.font = this.getSize() / 1.5 + 'px Arial Black';
         this.context.fillStyle = "#FF00CC";
