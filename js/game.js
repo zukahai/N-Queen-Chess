@@ -34,37 +34,28 @@ class game {
 
     listenTouch() {
         document.addEventListener("touchmove", evt => {
-
+            var y = evt.touches[0].pageY;
+            var x = evt.touches[0].pageX;
+            this.mouseMove(x, y);
         })
 
         document.addEventListener("touchstart", evt => {
-
+            var y = evt.touches[0].pageY;
+            var x = evt.touches[0].pageX;
+            this.moveDown(x, y);
         })
 
         document.addEventListener("touchend", evt => {
-
+            this.moveUp();
         })
     }
 
     listenMouse() {
         document.addEventListener("mousedown", evt => {
-            if (win)
-                return;
             var x = evt.offsetX == undefined ? evt.layerX : evt.offsetX;
             var y = evt.offsetY == undefined ? evt.layerY : evt.offsetY;
 
-            let Y = Math.floor((x - Xalignment) / sizeBlock);
-            let X = Math.floor((y - Yalignment) / sizeBlock);
-
-            if (data[X][Y] == 1) {
-                typeMove = 1;
-                xQueen2 = x;
-                yQueen2 = y;
-                preY = Y;
-                preX = X;
-                data[preX][preY] = 0;
-                console.log("111");
-            }
+            this.moveDown(x, y);
         })
 
         document.addEventListener("mousemove", evt => {
@@ -72,47 +63,73 @@ class game {
                 return;
             var x = evt.offsetX == undefined ? evt.layerX : evt.offsetX;
             var y = evt.offsetY == undefined ? evt.layerY : evt.offsetY;
-            if (x <= Xalignment + sizeBlock / 2)
-                x = Xalignment + sizeBlock / 2;
-            if (y <= Yalignment + sizeBlock / 2)
-                y = Yalignment + sizeBlock / 2;
-            if (x >= Xalignment + sizeChess - sizeBlock / 2)
-                x = Xalignment + sizeChess - sizeBlock / 2;
-            if (y >= Yalignment + sizeChess)
-                y = Yalignment + sizeChess - sizeBlock / 2;
-            if (typeMove == 1) {
-                xQueen2 = x;
-                yQueen2 = y;
-            }
+            this.mouseMove(x, y);
+
         })
 
         document.addEventListener("mouseup", evt => {
-            if (win)
-                return;
-            var x = evt.offsetX == undefined ? evt.layerX : evt.offsetX;
-            var y = evt.offsetY == undefined ? evt.layerY : evt.offsetY;
-            let Y = Math.floor((xQueen2 - Xalignment) / sizeBlock);
-            let X = Math.floor((yQueen2 - Yalignment) / sizeBlock);
-
-            if (typeMove == 1) {
-                if (data[X][Y] == 0) {
-                    xQueen = X;
-                    yQueen = Y;
-                    data[X][Y] = 1;
-                } else {
-                    data[preX][preY] = 1;
-                }
-            }
-            typeMove = 0;
-            let k = this.check();
-            if (k.length == 0) {
-                window.alert("Win");
-                N++;
-                this.canvas.width = 0;
-                this.render();
-                this.createData();
-            }
+            this.moveUp();
         })
+    }
+
+    moveUp() {
+        if (win)
+            return;
+        let Y = Math.floor((xQueen2 - Xalignment) / sizeBlock);
+        let X = Math.floor((yQueen2 - Yalignment) / sizeBlock);
+
+        if (typeMove == 1) {
+            if (data[X][Y] == 0) {
+                xQueen = X;
+                yQueen = Y;
+                data[X][Y] = 1;
+            } else {
+                data[preX][preY] = 1;
+            }
+        }
+        typeMove = 0;
+        let k = this.check();
+        if (k.length == 0) {
+            window.alert("Win");
+            N++;
+            this.canvas.width = 0;
+            this.render();
+            this.createData();
+        }
+    }
+
+    moveDown(x, y) {
+        if (win)
+            return;
+        let Y = Math.floor((x - Xalignment) / sizeBlock);
+        let X = Math.floor((y - Yalignment) / sizeBlock);
+
+        if (data[X][Y] == 1) {
+            typeMove = 1;
+            xQueen2 = x;
+            yQueen2 = y;
+            preY = Y;
+            preX = X;
+            data[preX][preY] = 0;
+            console.log("111");
+        }
+    }
+
+    mouseMove(x, y) {
+        if (win)
+            return;
+        if (x <= Xalignment + sizeBlock / 2)
+            x = Xalignment + sizeBlock / 2;
+        if (y <= Yalignment + sizeBlock / 2)
+            y = Yalignment + sizeBlock / 2;
+        if (x >= Xalignment + sizeChess - sizeBlock / 2)
+            x = Xalignment + sizeChess - sizeBlock / 2;
+        if (y >= Yalignment + sizeChess)
+            y = Yalignment + sizeChess - sizeBlock / 2;
+        if (typeMove == 1) {
+            xQueen2 = x;
+            yQueen2 = y;
+        }
     }
 
     isPoint(x, y) {
@@ -212,7 +229,8 @@ class game {
         this.context.fillStyle = "#FF00CC";
 
         this.context.textAlign = "center";
-        this.context.fillText("Arrange " + N + " queens so that they do not eat each other.", game_W / 2, Yalignment - sizeBlock / 2);
+        this.context.fillText("Arrange " + N + " queens", game_W / 2, Yalignment / 2);
+        this.context.fillText("so that they do not eat each other.", game_W / 2, Yalignment / 2 + this.getSize() / 1.5);
     }
 
     drawQueen(type) {
