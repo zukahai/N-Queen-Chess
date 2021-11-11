@@ -287,7 +287,8 @@ class game {
             this.context.drawImage(preIM, Xalignment - sizeBlock * 0.8, Yalignment + sizeChess / 2 - sizeBlock, sizeBlock * 0.7, sizeBlock * 2);
             this.context.drawImage(nextIM, Xalignment + sizeChess + sizeBlock * 0.1, Yalignment + sizeChess / 2 - sizeBlock, sizeBlock * 0.7, sizeBlock * 2);
         }
-        this.context.drawImage(reloadIM, game_W - sizeBlock, 0, sizeBlock, sizeBlock);
+        let R = 0.6 * sizeBlock;
+        this.context.drawImage(reloadIM, game_W - sizeBlock + (sizeBlock - R) / 2, (sizeBlock - R) / 2, R, R);
     }
 
     drawText() {
