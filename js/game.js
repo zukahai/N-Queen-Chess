@@ -63,6 +63,7 @@ class game {
                 preY = Y;
                 preX = X;
                 data[preX][preY] = 0;
+                console.log("111");
             }
         })
 
@@ -93,12 +94,14 @@ class game {
             let Y = Math.floor((xQueen2 - Xalignment) / sizeBlock);
             let X = Math.floor((yQueen2 - Yalignment) / sizeBlock);
 
-            if (typeMove == 1 && data[X][Y] == 0) {
-                xQueen = X;
-                yQueen = Y;
-                data[X][Y] = 1;
-            } else {
-                data[preX][preY] = 1;
+            if (typeMove == 1) {
+                if (data[X][Y] == 0) {
+                    xQueen = X;
+                    yQueen = Y;
+                    data[X][Y] = 1;
+                } else {
+                    data[preX][preY] = 1;
+                }
             }
             typeMove = 0;
             let k = this.check();
