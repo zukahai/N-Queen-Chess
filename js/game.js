@@ -10,8 +10,6 @@ typeMove = 0;
 N = 8;
 data = Array.from(new Array(N), () => Array.from(new Array(N), () => 0));
 win = false;
-step = 1;
-
 
 class game {
     constructor() {
@@ -164,11 +162,9 @@ class game {
     drawText() {
         this.context.font = this.getSize() / 1.5 + 'px Arial Black';
         this.context.fillStyle = "#FF00CC";
-        let s = " steps"
-        if (step < 2)
-            s = " step"
+
         this.context.textAlign = "center";
-        this.context.fillText(step + s + " left to get to the red box", game_W / 2, Yalignment - sizeBlock / 2);
+        this.context.fillText("Arrange " + N + " queens so that they do not eat each other.", game_W / 2, Yalignment - sizeBlock / 2);
     }
 
     drawQueen(type) {
