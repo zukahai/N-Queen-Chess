@@ -4,8 +4,8 @@ Xalignment = Yalignment = 0;
 
 let QueenIM = new Image();
 QueenIM.src = "images/queen.png";
-xQeen = yQueen = 3;
-xQeen2 = yQueen2 = 0;
+xQueen = yQueen = 3;
+xQueen2 = yQueen2 = 0;
 typeMove = 0;
 N = 8;
 data = Array.from(new Array(N), () => Array.from(new Array(N), () => 0));
@@ -60,7 +60,7 @@ class game {
             if (data[X][Y] == 1) {
                 console.log("Hello");
                 typeMove = 1;
-                xQeen2 = x;
+                xQueen2 = x;
                 yQueen2 = y;
             }
         })
@@ -78,8 +78,9 @@ class game {
                 x = Xalignment + sizeChess - sizeBlock / 2;
             if (y >= Yalignment + sizeChess)
                 y = Yalignment + sizeChess - sizeBlock / 2;
+            console.log(typeMove);
             if (typeMove == 1) {
-                xQeen = x;
+                xQueen2 = x;
                 yQueen2 = y;
             }
         })
@@ -89,13 +90,13 @@ class game {
                 return;
             var x = evt.offsetX == undefined ? evt.layerX : evt.offsetX;
             var y = evt.offsetY == undefined ? evt.layerY : evt.offsetY;
-            let Y = Math.floor((xQeen2 - Xalignment) / sizeBlock);
+            let Y = Math.floor((xQueen2 - Xalignment) / sizeBlock);
             let X = Math.floor((yQueen2 - Yalignment) / sizeBlock);
 
             // console.log(X, ' ', Y, ' ', xKNight, ' ', yKNight);
 
             if (typeMove == 1 && data[X][Y] == 0) {
-                xQeen = X;
+                xQueen = X;
                 yQueen = Y;
                 data[X][Y] = 1;
             }
@@ -169,16 +170,18 @@ class game {
     }
 
     drawQueen(type) {
+        let R = sizeBlock / 1.2;
         for (let i = 0; i < N; i++)
             for (let j = 0; j < N; j++)
                 if (data[i][j] == 1) {
-                    let R = sizeBlock / 1.2;
                     let X = Xalignment + j * sizeBlock + (sizeBlock - R) / 2;
                     let Y = Yalignment + i * sizeBlock + (sizeBlock - R) / 2;
                     this.context.drawImage(QueenIM, X, Y, R, R);
                 }
-        if (type == 1)
-            this.context.drawImage(QueenIM, xQeen2 - sizeBlock / 2, yQueen2 - sizeBlock / 2, sizeBlock, sizeBlock);
+        if (type == 1) {
+            this.context.drawImage(QueenIM, xQueen2 - R / 2, yQueen2 - R / 2, R, R);
+        }
+
     }
 
     clearScreen() {
