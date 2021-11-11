@@ -284,8 +284,8 @@ class game {
             this.context.fillStyle = "#FF00CC";
             this.context.textAlign = "center";
             this.context.fillText((index + 1) + " / " + ans.length, game_W / 2, Yalignment + sizeChess * 1.05 + (game_H - Yalignment - sizeChess) / 4);
-            this.context.drawImage(preIM, Xalignment - sizeBlock * 1.1, Yalignment + sizeChess / 2 - sizeBlock, sizeBlock, sizeBlock * 2);
-            this.context.drawImage(nextIM, Xalignment + sizeChess + sizeBlock * 0.1, Yalignment + sizeChess / 2 - sizeBlock, sizeBlock, sizeBlock * 2);
+            this.context.drawImage(preIM, Xalignment - sizeBlock * 0.8, Yalignment + sizeChess / 2 - sizeBlock, sizeBlock * 0.7, sizeBlock * 2);
+            this.context.drawImage(nextIM, Xalignment + sizeChess + sizeBlock * 0.1, Yalignment + sizeChess / 2 - sizeBlock, sizeBlock * 0.7, sizeBlock * 2);
         }
         this.context.drawImage(reloadIM, game_W - sizeBlock, 0, sizeBlock, sizeBlock);
     }
