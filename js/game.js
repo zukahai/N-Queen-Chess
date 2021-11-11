@@ -25,6 +25,9 @@ class game {
         this.chessBoard = new chessboard(this);
         this.render();
         this.createData();
+        let k = new Algorithm(N);
+        let h = k.listAnswer();
+        console.log(h);
 
         this.loop();
 
@@ -198,7 +201,8 @@ class game {
 
     createData() {
         data = Array.from(new Array(N), () => Array.from(new Array(N), () => 0));
-        data[0] = Array.from(new Array(N), () => 1);
+        for (let i = 0; i < N; i++)
+            data[i][i] = 1;
         console.log(data);
     }
 
