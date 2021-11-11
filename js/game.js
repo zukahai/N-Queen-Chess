@@ -5,7 +5,7 @@ Xalignment = Yalignment = 0;
 let QueenIM = new Image();
 QueenIM.src = "images/queen.png";
 xQueen = yQueen = 3;
-xQueen2 = yQueen2 = 0;
+xQueen2 = yQueen2 = preX = preY = 0;
 typeMove = 0;
 N = 8;
 data = Array.from(new Array(N), () => Array.from(new Array(N), () => 0));
@@ -54,14 +54,17 @@ class game {
                 return;
             var x = evt.offsetX == undefined ? evt.layerX : evt.offsetX;
             var y = evt.offsetY == undefined ? evt.layerY : evt.offsetY;
+
             let Y = Math.floor((x - Xalignment) / sizeBlock);
             let X = Math.floor((y - Yalignment) / sizeBlock);
-            console.log(X, ' ', Y);
+
             if (data[X][Y] == 1) {
-                console.log("Hello");
                 typeMove = 1;
                 xQueen2 = x;
                 yQueen2 = y;
+                preY = Y;
+                preX = X;
+                data[preX][preY] = 0;
             }
         })
 
@@ -78,7 +81,6 @@ class game {
                 x = Xalignment + sizeChess - sizeBlock / 2;
             if (y >= Yalignment + sizeChess)
                 y = Yalignment + sizeChess - sizeBlock / 2;
-            console.log(typeMove);
             if (typeMove == 1) {
                 xQueen2 = x;
                 yQueen2 = y;
@@ -93,12 +95,12 @@ class game {
             let Y = Math.floor((xQueen2 - Xalignment) / sizeBlock);
             let X = Math.floor((yQueen2 - Yalignment) / sizeBlock);
 
-            // console.log(X, ' ', Y, ' ', xKNight, ' ', yKNight);
-
             if (typeMove == 1 && data[X][Y] == 0) {
                 xQueen = X;
                 yQueen = Y;
                 data[X][Y] = 1;
+            } else {
+                data[preX][preY] = 1;
             }
             typeMove = 0;
         })
