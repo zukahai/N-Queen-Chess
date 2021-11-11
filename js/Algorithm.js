@@ -15,16 +15,18 @@ class Algorithm {
     }
 
     NQueen(i) {
-        console.log(i);
         for (let j = 0; j < this.n; j++) {
             if (this.row[i] == 0 && this.col[j] == 0 && this.c1[i - j + (N - 1)] == 0 && this.c2[i + j] == 0) {
+                // console.log(i, ' ', j);
                 this.temp[i] = j;
                 this.row[i] = 1;
                 this.col[j] = 1;
                 this.c1[i - j + (N - 1)] = 1;
                 this.c2[i + j] = 1;
                 if (i == this.n - 1) {
-                    this.ans.push(this.temp);
+                    this.ans[this.ans.length] = Array.from(new Array(N), () => 0);
+                    for (let index = 0; index < N; index++)
+                        this.ans[this.ans.length - 1][index] = this.temp[index];
                 } else {
                     this.NQueen(i + 1);
                 }

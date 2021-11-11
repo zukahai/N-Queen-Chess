@@ -4,12 +4,23 @@ Xalignment = Yalignment = 0;
 
 let QueenIM = new Image();
 QueenIM.src = "images/queen.png";
+let AutoIM = new Image();
+AutoIM.src = "images/auto.png";
+let preIM = new Image();
+preIM.src = "images/pre.png";
+let nextIM = new Image();
+nextIM.src = "images/next.png";
+let reloadIM = new Image();
+reloadIM.src = "images/reload.png";
 xQueen = yQueen = 3;
 xQueen2 = yQueen2 = preX = preY = 0;
 typeMove = 0;
 N = 4;
+ans = [];
 data = Array.from(new Array(N), () => Array.from(new Array(N), () => 0));
 win = false;
+auto = false;
+index = 0;
 
 class game {
     constructor() {
@@ -25,9 +36,6 @@ class game {
         this.chessBoard = new chessboard(this);
         this.render();
         this.createData();
-        let k = new Algorithm(N);
-        let h = k.listAnswer();
-        console.log(h);
 
         this.loop();
 
@@ -59,11 +67,10 @@ class game {
             var y = evt.offsetY == undefined ? evt.layerY : evt.offsetY;
 
             this.moveDown(x, y);
+            this.preNextAuto(x, y);
         })
 
         document.addEventListener("mousemove", evt => {
-            if (win)
-                return;
             var x = evt.offsetX == undefined ? evt.layerX : evt.offsetX;
             var y = evt.offsetY == undefined ? evt.layerY : evt.offsetY;
             this.mouseMove(x, y);
@@ -76,7 +83,7 @@ class game {
     }
 
     moveUp() {
-        if (win)
+        if (win || auto)
             return;
         let Y = Math.floor((xQueen2 - Xalignment) / sizeBlock);
         let X = Math.floor((yQueen2 - Yalignment) / sizeBlock);
@@ -92,6 +99,7 @@ class game {
         }
         typeMove = 0;
         let k = this.check();
+        this.draw();
         if (k.length == 0) {
             window.alert("Win");
             N++;
@@ -101,11 +109,41 @@ class game {
         }
     }
 
-    moveDown(x, y) {
-        if (win)
+    preNextAuto(x, y) {
+        if (x < Xalignment) {
+            index--;
+            if (index < 0)
+                index = ans.length - 1;
             return;
-        let Y = Math.floor((x - Xalignment) / sizeBlock);
-        let X = Math.floor((y - Yalignment) / sizeBlock);
+        }
+        if (x > Xalignment + sizeChess) {
+            index++;
+            if (index >= ans.length)
+                index = 0;
+            return;
+        }
+    }
+
+    moveDown(x, y) {
+        if (x > game_W - sizeBlock && y < sizeBlock) {
+            auto = false;
+            this.createData();
+            return;
+        }
+
+
+        let w = 1.2 * sizeBlock;
+        let h = sizeBlock / 2;
+        let X = game_W / 2 - w / 2;
+        let Y = Yalignment + sizeChess + sizeBlock / 13;
+        if (x >= X && x <= X + w && y >= Y - h && y < Y + h) {
+            auto = true;
+        }
+
+        if (win || auto)
+            return;
+        Y = Math.floor((x - Xalignment) / sizeBlock);
+        X = Math.floor((y - Yalignment) / sizeBlock);
 
         if (data[X][Y] == 1) {
             typeMove = 1;
@@ -114,12 +152,11 @@ class game {
             preY = Y;
             preX = X;
             data[preX][preY] = 0;
-            console.log("111");
         }
     }
 
     mouseMove(x, y) {
-        if (win)
+        if (win || auto)
             return;
         if (x <= Xalignment + sizeBlock / 2)
             x = Xalignment + sizeBlock / 2;
@@ -155,6 +192,12 @@ class game {
 
     update() {
         this.render();
+        if (auto) {
+            data = Array.from(new Array(N), () => Array.from(new Array(N), () => 0));
+            for (let i = 0; i < N; i++)
+                data[i][ans[index][i]] = 1;
+
+        }
     }
 
     render() {
@@ -203,7 +246,7 @@ class game {
         data = Array.from(new Array(N), () => Array.from(new Array(N), () => 0));
         for (let i = 0; i < N; i++)
             data[i][i] = 1;
-        console.log(data);
+        ans = new Algorithm(N).listAnswer();
     }
 
     draw() {
@@ -212,6 +255,7 @@ class game {
         this.drawBackground();
         this.drawQueen(typeMove);
         this.drawText();
+        this.drawAuto();
     }
 
     drawBackground() {
@@ -226,6 +270,24 @@ class game {
             this.context.arc(X, Y, R, 0, 2 * Math.PI);
             this.context.fill();
         }
+    }
+
+    drawAuto() {
+        if (!auto) {
+            let w = 1.2 * sizeBlock;
+            let h = sizeBlock / 2;
+            let X = game_W / 2 - w / 2;
+            let Y = Yalignment + sizeChess + sizeBlock / 13;
+            this.context.drawImage(AutoIM, X, Y, w, h);
+        } else {
+            this.context.font = this.getSize() / 3 + 'px Arial Black';
+            this.context.fillStyle = "#FF00CC";
+            this.context.textAlign = "center";
+            this.context.fillText((index + 1) + " / " + ans.length, game_W / 2, Yalignment + sizeChess + sizeBlock / 3);
+            this.context.drawImage(preIM, Xalignment - sizeBlock * 1.1, Yalignment + sizeChess / 2 - sizeBlock, sizeBlock, sizeBlock * 2);
+            this.context.drawImage(nextIM, Xalignment + sizeChess + sizeBlock * 0.1, Yalignment + sizeChess / 2 - sizeBlock, sizeBlock, sizeBlock * 2);
+        }
+        this.context.drawImage(reloadIM, game_W - sizeBlock, 0, sizeBlock, sizeBlock);
     }
 
     drawText() {
